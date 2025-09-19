@@ -81,7 +81,7 @@
 </head>
 <body>
     <p>
-    Move mouse for "hologram" effect
+    Move mouse or tap different places on screen for "hologram" effect
     </p>
     <div id="mainOuter" >
     <div id="main" >
@@ -1470,8 +1470,8 @@
         yPos = yPos + 0.05 * (mouseY - yPos);
         w += 0.02;
 
-        const x = xPos + .02 * Math.sin(w) + .02 * Math.sin(w * 0.4987) + .02 * Math.sin(w * 1.1987);
-        const y = yPos + .02 * Math.cos(w) + .02 * Math.cos(w * 0.4187) + .02 * Math.cos(w * 1.4987);
+        const x = xPos + .02 * Math.sin(w) + .02 * Math.sin(w * 0.4987) + .02 * Math.sin(w * 1.1987) + Math.sign(Math.sin(w * .10103)) * .5 * Math.pow(Math.sin(w * .10103), 400);
+        const y = yPos + .02 * Math.cos(w) + .02 * Math.cos(w * 0.4187) + .02 * Math.cos(w * 1.4987) + Math.sign(Math.cos(w * .10103)) * .5 * Math.pow(Math.cos(w * .10103), 400);
 
         const angleX = x * 180 / 5;
         const angleY = y * -180 / 5;
@@ -1484,15 +1484,12 @@
         screens.style.transform = `rotate3d(1,0,0,${angleY}deg) rotate3d(0,1,0,${angleX}deg)`;
         const background = document.getElementById('background');
         background.style.transform = `rotate3d(1,0,0,${angleY}deg) rotate3d(0,1,0,${angleX}deg) translateZ(-40lvw)`;
-
-        const x3 = x2 + 20 * Math.pow(Math.sin(w * .1), 400);
-        const y3 = y2 + 20 * Math.pow(Math.cos(w * .1), 400);
         
-        document.getElementById('gaussian').setAttribute('stdDeviation', `${Math.abs(x3)} ${Math.abs(y3)}`);
-        document.getElementById('offset1').setAttribute('dx', `${x3 * -2}`);
-        document.getElementById('offset1').setAttribute('dy', `${y3 * -2}`);
-        document.getElementById('offset2').setAttribute('dx', `${x3 * 2}`);
-        document.getElementById('offset2').setAttribute('dy', `${y3 * 2}`);
+        document.getElementById('gaussian').setAttribute('stdDeviation', `${Math.abs(x2)} ${Math.abs(y2)}`);
+        document.getElementById('offset1').setAttribute('dx', `${x2 * -2}`);
+        document.getElementById('offset1').setAttribute('dy', `${y2 * -2}`);
+        document.getElementById('offset2').setAttribute('dx', `${x2 * 2}`);
+        document.getElementById('offset2').setAttribute('dy', `${y2 * 2}`);
     }
 
     hideAndShow();
@@ -1511,7 +1508,7 @@
     document.addEventListener('touchmove', function (event) {
         event.preventDefault(); 
 
-        if (targetTouches.length != 1) return;
+        if (targetTouches.length == 0) return;
         mouseMoved(targetTouches[0].clientX, targetTouches[0].clientY);
 
     });
