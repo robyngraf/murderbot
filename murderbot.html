@@ -1470,8 +1470,8 @@
         yPos = yPos + 0.05 * (mouseY - yPos);
         w += 0.02;
 
-        const x = xPos + .05 * Math.sin(w);
-        const y = yPos + .05 * Math.cos(w);
+        const x = xPos + .02 * Math.sin(w) + .02 * Math.sin(w * 0.4987) + .02 * Math.sin(w * 1.1987);
+        const y = yPos + .02 * Math.cos(w) + .02 * Math.cos(w * 0.4187) + .02 * Math.cos(w * 1.4987);
 
         const angleX = x * 180 / 5;
         const angleY = y * -180 / 5;
@@ -1485,22 +1485,35 @@
         const background = document.getElementById('background');
         background.style.transform = `rotate3d(1,0,0,${angleY}deg) rotate3d(0,1,0,${angleX}deg) translateZ(-40lvw)`;
 
+        const x3 = x2 + 20 * Math.pow(Math.sin(w * .1), 400);
+        const y3 = y2 + 20 * Math.pow(Math.cos(w * .1), 400);
         
-        document.getElementById('gaussian').setAttribute('stdDeviation', `${Math.abs(x2)} ${Math.abs(y2)}`);
-        document.getElementById('offset1').setAttribute('dx', `${x2 * -2}`);
-        document.getElementById('offset1').setAttribute('dy', `${y2 * -2}`);
-        document.getElementById('offset2').setAttribute('dx', `${x2 * 2}`);
-        document.getElementById('offset2').setAttribute('dy', `${y2 * 2}`);
+        document.getElementById('gaussian').setAttribute('stdDeviation', `${Math.abs(x3)} ${Math.abs(y3)}`);
+        document.getElementById('offset1').setAttribute('dx', `${x3 * -2}`);
+        document.getElementById('offset1').setAttribute('dy', `${y3 * -2}`);
+        document.getElementById('offset2').setAttribute('dx', `${x3 * 2}`);
+        document.getElementById('offset2').setAttribute('dy', `${y3 * 2}`);
     }
 
     hideAndShow();
     animate();
 
-    document.addEventListener('pointermove', function (event) {
+    function mouseMoved(mx, my) {
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-        mouseX = event.clientX / viewportWidth - 0.5;
-        mouseY = event.clientY / viewportHeight - 0.5;
+        mouseX = mx / viewportWidth - 0.5;
+        mouseY = my / viewportHeight - 0.5;
+    }
+    document.addEventListener('mousemove', function (event) {
+        mouseMoved(event.clientX, event.clientY);
+    });
+
+    document.addEventListener('touchmove', function (event) {
+        event.preventDefault(); 
+
+        if (targetTouches.length != 1) return;
+        mouseMoved(targetTouches[0].clientX, targetTouches[0].clientY);
+
     });
 </script>
 </body>
